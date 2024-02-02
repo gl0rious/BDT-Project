@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  kafka-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - big_data_network
+
+networks:
+  big_data_network:
+    external: true

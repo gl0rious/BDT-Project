@@ -1,0 +1,22 @@
+FROM bitnami/spark:3.5
+
+COPY target/scala-2.12/sparkjob_2.12-1.0.jar  \
+    /opt/bitnami/spark/sparkjob.jar
+COPY spark_test.py  \
+    /opt/bitnami/spark/spark_test.py
+
+# ENTRYPOINT [ "spark-submit", \
+#              "--class", "SparkJob", \
+#              "--master", "spark://spark:7077", \
+#              "--deploy-mode", "client", \
+#              "--packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0", \
+#              "/opt/bitnami/spark/sparkjob.jar" \
+#            ]
+
+# COPY spark_job.py /opt/bitnami/spark/sparkjob.py
+
+# ENTRYPOINT [ "spark-submit", \
+#              "--master", "spark://spark:7077", \
+#              "--deploy-mode", "client", \
+#              "/opt/bitnami/spark/sparkjob.py" \
+#            ]

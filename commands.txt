@@ -1,0 +1,50 @@
+docker network create big_data_network
+
+docker-compose up --build -d
+
+docker stats
+
+docker-compose exec kafka kafka-topics.sh --create --topic products-sold \
+ --bootstrap-server localhost:9092
+
+docker-compose exec kafka kafka-console-consumer.sh --bootstrap-server \
+ localhost:9092 --topic products-sold --from-beginning
+
+
+
+spark-submit --master spark://spark:7077 --deploy-mode cluster /opt/bitnami/spark/spark_job.py
+
+
+docker-compose exec spark-driver spark-submit \
+  --class SparkJob \
+  --master spark://spark:7077 \
+  --deploy-mode client \
+  sparkjob_2.12-1.0.jar
+
+docker-compose exec spark-driver spark-submit \
+  --class SparkJob \
+  --master spark://spark:7077 \
+  --deploy-mode client \
+  --driver-memory 512m \ 
+  --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
+  sparkjob_2.12-1.0.jar
+
+
+
+docker-compose exec hive bash
+
+beeline -u 'jdbc:hive2://localhost:10000/'
+
+
+CREATE TABLE retail_data (
+  id INT,
+  name STRING,
+  quantity INT,
+  `timestamp` BIGINT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+
+docker-compose exec spark-driver spark-submit --master spark://spark:7077 --deploy-mode cluster /opt/bitnami/spark/spark_job.py
